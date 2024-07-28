@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class WishList extends Model
+{
+    use HasFactory;
+    protected $guarded = [];
+
+    // lấy thông tin course liên quan đến mỗi mục trong wishlist
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'course_id', 'id');
+    }
+}
