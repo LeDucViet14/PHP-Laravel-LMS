@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\WishListController;
+use App\Http\Controllers\Frontend\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,6 +93,13 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::get('/all/instructor', 'AllInstructor')->name('all.instructor');
         Route::post('/update/user/stauts', 'UpdateUserStatus')->name('update.user.stauts');
     });
+
+    // Admin Coruses All Route 
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/admin/all/course', 'AdminAllCourse')->name('admin.all.course');
+        Route::post('/update/course/stauts', 'UpdateCourseStatus')->name('update.course.stauts');
+        Route::get('/admin/course/details/{id}', 'AdminCourseDetails')->name('admin.course.details');
+    });
 }); // End Admin group middleware
 
 
@@ -149,6 +157,20 @@ Route::get('/instructor/details/{id}', [IndexController::class, 'InstructorDetai
 
 // thêm khoá học vào wish list
 Route::post('/add-to-wishlist/{course_id}', [WishListController::class, 'AddToWishList']);
+
+// add to cart
+Route::post('/cart/data/store/{id}', [CartController::class, 'AddToCart']);
+Route::get('/course/mini/cart/', [CartController::class, 'LoadListCart']);
+// remove mini cart
+Route::get('/minicart/course/remove/{rowId}', [CartController::class, 'RemoveCart']);
+
+// Cart All Route 
+Route::controller(CartController::class)->group(function () {
+    Route::get('/mycart', 'MyCart')->name('mycart');
+    Route::get('/get-cart-course', 'LoadListCart');
+    Route::get('/cart-remove/{rowId}', 'RemoveCart');
+});
+
 
 // .../instructor/login
 Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin'])->name('instructor.login');

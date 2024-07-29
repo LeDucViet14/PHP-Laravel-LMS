@@ -28,20 +28,40 @@ class AuthenticatedSessionController extends Controller
     //  xác thực người dùng login
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        // $request->authenticate();
 
-        $request->session()->regenerate();
+        // $request->session()->regenerate();
 
+        // $url = '';
+        // if ($request->user()->role === 'admin') {
+        //     $url = 'admin/dashboard';
+        // } elseif ($request->user()->role === 'instructor') {
+        //     $url = 'instructor/dashboard';
+        // } elseif ($request->user()->role === 'user') {
+        //     $url = '/dashboard';
+        // }
+
+        // return redirect()->intended($url);
         $url = '';
-        if ($request->user()->role === 'admin') {
-            $url = 'admin/dashboard';
-        } elseif ($request->user()->role === 'instructor') {
-            $url = 'instructor/dashboard';
-        } elseif ($request->user()->role === 'user') {
-            $url = '/dashboard';
-        }
 
-        return redirect()->intended($url);
+        $credentials = $request->only('email', 'password');
+        $remember = $request->filled('rememberMeCheckbox'); // Kiểm tra xem checkbox "Remember Me" có được chọn không
+        if (Auth::attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+
+            if ($request->user()->role === 'admin') {
+                $url = 'admin/dashboard';
+            } elseif ($request->user()->role === 'instructor') {
+                $url = 'instructor/dashboard';
+            } elseif ($request->user()->role === 'user') {
+                $url = '/dashboard';
+            }
+            return redirect()->intended($url);
+        } else {
+            return redirect()->back()->with([
+                'message' => 'Incorrect email or password !'
+            ]);
+        }
     }
 
     /**

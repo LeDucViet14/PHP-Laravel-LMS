@@ -255,8 +255,8 @@ class CourseController extends Controller
         //     
         // }
         Course_goal::where('course_id', $id)->delete();
-
-
+        CourseSection::where('course_id', $id)->delete();
+        CourseLecture::where('course_id', $id)->delete();
         $notification = array(
             'message' => 'Course Deleted Successfully',
             'alert-type' => 'success'

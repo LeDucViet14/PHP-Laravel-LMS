@@ -51,7 +51,7 @@ class InstructorController extends Controller
 
         if ($request->file('photo')) {
             $file = $request->file('photo');
-            @unlink(public_path('upload/instructor_images/' . $data->photo));
+            unlink(public_path('upload/instructor_images/' . $data->photo));
             $filename = date('YmdHi') . $file->getClientOriginalName();
             $file->move(public_path('upload/instructor_images'), $filename);
             $data['photo'] = $filename;

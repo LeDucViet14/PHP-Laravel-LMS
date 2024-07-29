@@ -1,8 +1,8 @@
 @extends('frontend.master')
 @section('home')
     <!-- ================================
-                START BREADCRUMB AREA
-            ================================= -->
+                                            START BREADCRUMB AREA
+                                        ================================= -->
     <section class="breadcrumb-area section-padding img-bg-2">
         <div class="overlay"></div>
         <div class="container">
@@ -20,12 +20,12 @@
         </div><!-- end container -->
     </section><!-- end breadcrumb-area -->
     <!-- ================================
-                END BREADCRUMB AREA
-            ================================= -->
+                                            END BREADCRUMB AREA
+                                        ================================= -->
 
     <!-- ================================
-                   START CONTACT AREA
-            ================================= -->
+                                               START CONTACT AREA
+                                        ================================= -->
     <section class="contact-area section--padding position-relative">
         <span class="ring-shape ring-shape-1"></span>
         <span class="ring-shape ring-shape-2"></span>
@@ -64,6 +64,9 @@
                                         <input class="form-control form--control" id="email" type="email"
                                             name="email" placeholder="Email or Username">
                                         <span class="la la-user input-icon"></span>
+                                        {{-- @if (session('message'))
+                                            <p class="text-danger">{{ session('message') }}</p>
+                                        @endif --}}
                                     </div>
                                 </div><!-- end input-box -->
                                 <div class="input-box">
@@ -96,7 +99,7 @@
                                     <div class="d-flex align-items-center justify-content-between pb-4">
                                         <div class="custom-control custom-checkbox fs-15">
                                             <input type="checkbox" class="custom-control-input" id="rememberMeCheckbox"
-                                                required>
+                                                name="rememberMeCheckbox">
                                             <label class="custom-control-label custom--control-label"
                                                 for="rememberMeCheckbox">Remember Me</label>
                                         </div><!-- end custom-control -->
@@ -115,6 +118,6 @@
         </div><!-- end container -->
     </section><!-- end contact-area -->
     <!-- ================================
-                   END CONTACT AREA
-            ================================= -->
+                                               END CONTACT AREA
+                                        ================================= -->
 @endsection
