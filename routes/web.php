@@ -11,6 +11,7 @@ use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Frontend\IndexController;
 use App\Http\Controllers\Frontend\WishListController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Backend\CouponController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +101,16 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::post('/update/course/stauts', 'UpdateCourseStatus')->name('update.course.stauts');
         Route::get('/admin/course/details/{id}', 'AdminCourseDetails')->name('admin.course.details');
     });
+
+    // Admin Coupon All Route 
+    Route::controller(CouponController::class)->group(function () {
+        Route::get('/admin/all/coupon', 'AdminAllCoupon')->name('admin.all.coupon');
+        Route::get('/admin/add/coupon', 'AdminAddCoupon')->name('admin.add.coupon');
+        Route::post('/admin/store/coupon', 'AdminStoreCoupon')->name('admin.store.coupon');
+        Route::get('/admin/edit/coupon/{id}', 'AdminEditCoupon')->name('admin.edit.coupon');
+        Route::post('/admin/update/coupon', 'AdminUpdateCoupon')->name('admin.update.coupon');
+        Route::get('/admin/delete/coupon/{id}', 'AdminDeleteCoupon')->name('admin.delete.coupon');
+    });
 }); // End Admin group middleware
 
 
@@ -164,6 +175,15 @@ Route::get('/course/mini/cart/', [CartController::class, 'LoadListCart']);
 // remove mini cart
 Route::get('/minicart/course/remove/{rowId}', [CartController::class, 'RemoveCart']);
 
+// apply mã giảm giá
+Route::post('/coupon-apply', [CartController::class, 'CouponApply']);
+
+// tính tổng tiền giỏ hàng sau khi apply mã
+Route::get('/coupon-calculation', [CartController::class, 'CouponCalculation']);
+
+// remove mã giảm
+Route::get('/coupon-remove', [CartController::class, 'CouponRemove']);
+
 // Cart All Route 
 Route::controller(CartController::class)->group(function () {
     Route::get('/mycart', 'MyCart')->name('mycart');
@@ -171,7 +191,12 @@ Route::controller(CartController::class)->group(function () {
     Route::get('/cart-remove/{rowId}', 'RemoveCart');
 });
 
+/// Checkout Page Route 
+Route::get('/checkout', [CartController::class, 'CheckoutCreate'])->name('checkout');
+
 
 // .../instructor/login
 Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin'])->name('instructor.login');
 Route::post('/user/registered', [UserController::class, 'Registered'])->name('Registered');
+
+/////////////////////////// End Route for all ////////////////////////////////

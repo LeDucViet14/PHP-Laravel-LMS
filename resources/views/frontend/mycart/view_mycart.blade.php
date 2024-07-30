@@ -1,8 +1,8 @@
 @extends('frontend.master')
 @section('home')
     <!-- ================================
-                                    START BREADCRUMB AREA
-                                ================================= -->
+                                                                                START BREADCRUMB AREA
+                                                                            ================================= -->
     <section class="breadcrumb-area section-padding img-bg-2">
         <div class="overlay"></div>
         <div class="container">
@@ -20,12 +20,12 @@
         </div><!-- end container -->
     </section><!-- end breadcrumb-area -->
     <!-- ================================
-                                    END BREADCRUMB AREA
-                                ================================= -->
+                                                                                END BREADCRUMB AREA
+                                                                            ================================= -->
 
     <!-- ================================
-                                       START CONTACT AREA
-                                ================================= -->
+                                                                                   START CONTACT AREA
+                                                                            ================================= -->
     <section class="cart-area section-padding">
         <div class="container">
             <div class="table-responsive">
@@ -43,20 +43,26 @@
                     </tbody>
                 </table>
                 <div class="d-flex flex-wrap align-items-center justify-content-between pt-4">
-                    <form method="post">
-                        <div class="input-group mb-2">
-                            <input class="form-control form--control pl-3" type="text" name="search"
-                                placeholder="Coupon code">
-                            <div class="input-group-append">
-                                <button class="btn theme-btn">Apply Code</button>
+                    @if (Session::has('coupon'))
+                        {{-- {{ json_encode(Session::get('coupon'), JSON_PRETTY_PRINT) }} --}}
+                    @else
+                        <form action="#">
+                            <div class="input-group mb-2" id="couponField">
+                                <input class="form-control form--control pl-3" type="text" id="coupon_name"
+                                    placeholder="Coupon code">
+                                <div class="input-group-append">
+
+                                    <a type="submit" onclick="applyCoupon()" class="btn theme-btn"
+                                        style="color: white">Apply Code</a>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    @endif
                     <a href="#" class="btn theme-btn mb-2">Update Cart</a>
                 </div>
             </div>
             <div class="col-lg-4 ml-auto">
-                <div class="bg-gray p-4 rounded-rounded mt-40px">
+                <div class="bg-gray p-4 rounded-rounded mt-40px" id="couponCalField">
                     <h3 class="fs-18 font-weight-bold pb-3">Cart Totals</h3>
                     <div class="divider"><span></span></div>
                     <ul class="generic-list-item pb-4">
@@ -69,13 +75,14 @@
                             <span id="cartSubTotal"> </span>
                         </li>
                     </ul>
-                    <a href="checkout.html" class="btn theme-btn w-100">Checkout <i
-                            class="la la-arrow-right icon ml-1"></i></a>
+
                 </div>
+                <a href="{{ route('checkout') }}" class="btn theme-btn w-100">Checkout <i
+                        class="la la-arrow-right icon ml-1"></i></a>
             </div>
         </div><!-- end container -->
     </section>
     <!-- ================================
-                                       END CONTACT AREA
-                                ================================= -->
+                                                                                   END CONTACT AREA
+                                                                            ================================= -->
 @endsection
