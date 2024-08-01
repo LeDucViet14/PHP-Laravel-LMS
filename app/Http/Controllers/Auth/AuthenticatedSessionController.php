@@ -43,6 +43,10 @@ class AuthenticatedSessionController extends Controller
 
         // return redirect()->intended($url);
         $url = '';
+        $notification = array(
+            'message' => 'Login Successfully',
+            'alert-type' => 'success'
+        );
 
         $credentials = $request->only('email', 'password');
         $remember = $request->filled('rememberMeCheckbox'); // Kiểm tra xem checkbox "Remember Me" có được chọn không
@@ -56,7 +60,7 @@ class AuthenticatedSessionController extends Controller
             } elseif ($request->user()->role === 'user') {
                 $url = '/dashboard';
             }
-            return redirect()->intended($url);
+            return redirect()->intended($url)->with($notification);
         } else {
             return redirect()->back()->with([
                 'message' => 'Incorrect email or password !'
