@@ -17,6 +17,11 @@ use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Backend\QuestionController;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Controllers\Backend\ReportController;
+use App\Http\Controllers\Backend\ReviewController;
+use App\Http\Controllers\Backend\ActiveUserController;
+use App\Http\Controllers\Backend\BlogController;
+use App\Models\BlogCategory;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -148,6 +153,39 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::post('/search/by/month', 'SearchByMonth')->name('search.by.month');
         Route::post('/search/by/year', 'SearchByYear')->name('search.by.year');
     });
+
+    // Admin Review All Route 
+    Route::controller(ReviewController::class)->group(function () {
+        Route::get('/admin/pending/review', 'AdminPendingReview')->name('admin.pending.review');
+        Route::post('/update/review/stauts', 'UpdateReviewStatus')->name('update.review.stauts');
+        Route::get('/admin/active/review', 'AdminActiveReview')->name('admin.active.review');
+    });
+
+    // Admin All user and Instructor All Route 
+    Route::controller(ActiveUserController::class)->group(function () {
+        Route::get('/all/user', 'AllUser')->name('all.user');
+        Route::get('/all/instructor', 'AllInstructor')->name('all.instructor');
+    });
+
+    // Admin All Blog Category
+    Route::controller(BlogController::class)->group(function () {
+        Route::get('/blog/category', 'AllBlogCategory')->name('blog.category');
+        Route::post('/blog/category/store', 'StoreBlogCategory')->name('blog.category.store');
+        Route::get('/edit/blog/category/{id}', 'EditBlogCategory');
+        Route::post('/blog/category/update', 'UpdateBlogCategory')->name('blog.category.update');
+        Route::get('/delete/blog/category/{id}', 'DeleteBlogCategory')->name('delete.blog.category');
+    });
+
+
+    // Blog Post All Route 
+    Route::controller(BlogController::class)->group(function () {
+        Route::get('/blog/post', 'BlogPost')->name('blog.post');
+        Route::get('/add/blog/post', 'AddBlogPost')->name('add.blog.post');
+        Route::post('/store/blog/post', 'StoreBlogPost')->name('store.blog.post');
+        Route::get('/edit/post/{id}', 'EditBlogPost')->name('edit.post');
+        Route::post('/update/blog/post', 'UpdateBlogPost')->name('update.blog.post');
+        Route::get('/delete/post/{id}', 'DeleteBlogPost')->name('delete.post');
+    });
 }); // End Admin group middleware
 
 
@@ -209,6 +247,11 @@ Route::middleware(['auth', 'roles:instructor'])->group(function () {
         Route::post('/instructor/update/coupon', 'InstructorUpdateCoupon')->name('instructor.update.coupon');
         Route::get('/instructor/delete/coupon/{id}', 'InstructorDeleteCoupon')->name('instructor.delete.coupon');
     });
+
+    // Instructor Review All Route 
+    Route::controller(ReviewController::class)->group(function () {
+        Route::get('/instructor/all/review', 'InstructorAllReview')->name('instructor.all.review');
+    });
 }); // End Instructor group middleware
 
 
@@ -266,5 +309,17 @@ Route::post('/stripe_order', [CartController::class, 'StripeOrder'])->name('stri
 // .../instructor/login
 Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin'])->name('instructor.login')->middleware(RedirectIfAuthenticated::class);
 Route::post('/user/registered', [UserController::class, 'Registered'])->name('Registered');
+
+// add review
+Route::post('/store/review', [ReviewController::class, 'StoreReview'])->name('store.review');
+
+// blog detail
+Route::get('/blog/details/{id}/{slug}', [BlogController::class, 'BlogDetails']);
+
+// blog category
+Route::get('/blog/cat/list/{id}', [BlogController::class, 'BlogCatList']);
+
+// all blog
+Route::get('/blog', [BlogController::class, 'BlogList'])->name('blog');
 
 /////////////////////////// End Route for all ////////////////////////////////

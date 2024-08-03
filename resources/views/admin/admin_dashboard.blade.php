@@ -34,7 +34,9 @@
     <!-- End Datatable -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
+    <!--tagsinput-->
+    <link href="{{ asset('backend/assets/plugins/input-tags/css/tagsinput.css') }}" rel="stylesheet" />
+    <!--tagsinput-->
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
     <title>Rocker - Bootstrap 5 Admin Dashboard Template</title>
@@ -121,6 +123,20 @@
         @endif
     </script>
 
+    <!--tagsinput-->
+    <script src="{{ asset('backend/assets/plugins/input-tags/js/tagsinput.js') }}"></script>
+    <!--tagsinput-->
+
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+            plugins: 'powerpaste advcode table lists checklist',
+            toolbar: 'undo redo | blocks| bold italic | bullist numlist checklist | code | table',
+            apiKey: 'su6968h430nb0nyhq6qpcmdcf8bqr9m9i1e3ot5fvi494u5z', // Thay YOUR_API_KEY bằng API key bạn đã lấy từ TinyMCE
+
+        });
+    </script>
 
 </body>
 
