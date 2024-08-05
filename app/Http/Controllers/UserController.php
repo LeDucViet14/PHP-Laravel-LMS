@@ -73,7 +73,9 @@ class UserController extends Controller
 
         if ($request->file('photo')) {
             $file = $request->file('photo');
-            unlink(public_path('upload/user_images/' . $data->photo));
+            if ($data->photo != NULL) {
+                unlink(public_path('upload/user_images/' . $data->photo));
+            }
             $filename = date('YmdHi') . $file->getClientOriginalName();
             $file->move(public_path('upload/user_images'), $filename);
             $data['photo'] = $filename;
@@ -138,4 +140,10 @@ class UserController extends Controller
         );
         return back()->with($notification);
     } // End Method
+
+    public function LiveChat()
+    {
+        return view('frontend.dashboard.live_chat');
+    } // End Method 
+
 }

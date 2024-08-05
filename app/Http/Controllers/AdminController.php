@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Course;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class AdminController extends Controller
 {
@@ -187,6 +189,114 @@ class AdminController extends Controller
 
         $course = Course::find($id);
         return view('admin.backend.courses.course_details', compact('course'));
+    } // End Method
+
+
+    /// Admin User All Method ////////////
+
+    public function AllAdmin()
+    {
+        $alladmin = User::where('role', 'admin')->get();
+        return view('admin.backend.pages.admin.all_admin', compact('alladmin'));
+    } // End Method
+
+    public function AddAdmin()
+    {
+
+        $roles = Role::all();
+        return view('admin.backend.pages.admin.add_admin', compact('roles'));
+    } // End Method
+
+    public function StoreAdmin(Request $request)
+    {
+
+        $user = new User();
+        $user->username = $request->username;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        $user->password = Hash::make($request->password);
+        $user->role = 'admin';
+        $user->status = '1';
+        $user->save();
+        // dd($request->roles);
+        if ($request->roles) {
+            // Tìm vai trò dựa trên ID được cung cấp
+            $role = Role::find($request->roles);
+            if ($role) {
+                // dd($role->name);
+                $user->assignRole($role->name);
+            } else {
+                return redirect()->route('all.admin')->with([
+                    'message' => 'Role not found',
+                    'alert-type' => 'error'
+                ]);
+            }
+        }
+
+        $notification = array(
+            'message' => 'New Admin Inserted Successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('all.admin')->with($notification);
+    } // End Method
+
+    public function EditAdmin($id)
+    {
+
+        $user = User::find($id);
+        $roles = Role::all();
+        return view('admin.backend.pages.admin.edit_admin', compact('user', 'roles'));
+    } // End Method
+
+    public function UpdateAdmin(Request $request, $id)
+    {
+
+        $user = User::find($id);
+        $user->username = $request->username;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        $user->role = 'admin';
+        $user->status = '1';
+        $user->save();
+
+        $user->roles()->detach();
+        if ($request->roles) {
+            // Tìm vai trò dựa trên ID được cung cấp
+            $role = Role::find($request->roles);
+            if ($role) {
+                // dd($role->name);
+                $user->assignRole($role->name);
+            } else {
+                return redirect()->route('all.admin')->with([
+                    'message' => 'Role not found',
+                    'alert-type' => 'error'
+                ]);
+            }
+        }
+
+        $notification = array(
+            'message' => 'Admin Updated Successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('all.admin')->with($notification);
+    } // End Method
+
+    public function DeleteAdmin($id)
+    {
+        $user = User::find($id);
+        if (!is_null($user)) {
+            $user->delete();
+        }
+
+        $notification = array(
+            'message' => 'Admin Deleted Successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     } // End Method
 
 

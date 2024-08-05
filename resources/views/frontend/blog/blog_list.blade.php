@@ -1,8 +1,8 @@
 @extends('frontend.master')
 @section('home')
     <!-- ================================
-                START BREADCRUMB AREA
-            ================================= -->
+                                    START BREADCRUMB AREA
+                                ================================= -->
     <section class="breadcrumb-area section-padding img-bg-2">
         <div class="overlay"></div>
         <div class="container">
@@ -20,12 +20,12 @@
         </div><!-- end container -->
     </section><!-- end breadcrumb-area -->
     <!-- ================================
-                END BREADCRUMB AREA
-            ================================= -->
+                                    END BREADCRUMB AREA
+                                ================================= -->
 
     <!-- ================================
-                   START BLOG AREA
-            ================================= -->
+                                       START BLOG AREA
+                                ================================= -->
     <section class="blog-area section--padding">
         <div class="container">
             <div class="row">
@@ -84,25 +84,12 @@
                     </div><!-- end row -->
                     <div class="text-center pt-3">
                         <nav aria-label="Page navigation example" class="pagination-box">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true"><i class="la la-arrow-left"></i></span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true"><i class="la la-arrow-right"></i></span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </li>
-                            </ul>
+
+                            {{-- phân trang --}}
+                            {{ $blog->links('vendor.pagination.custom') }}
+
                         </nav>
-                        <p class="fs-14 pt-2">Showing 1-10 of 56 results</p>
+
                     </div>
                 </div><!-- end col-lg-8 -->
                 <div class="col-lg-4">
@@ -194,6 +181,6 @@
         </div><!-- end container -->
     </section><!-- end blog-area -->
     <!-- ================================
-                   START BLOG AREA
-            ================================= -->
+                                       START BLOG AREA
+                                ================================= -->
 @endsection

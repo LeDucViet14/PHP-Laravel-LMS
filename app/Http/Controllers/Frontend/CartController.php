@@ -21,6 +21,10 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Orderconfirm;
 use Stripe;
+use App\Models\User;
+use App\Notifications\OrderComplete;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
@@ -219,6 +223,7 @@ class CartController extends Controller
 
     public function Payment(Request $request)
     {
+        $user = User::where('role', 'instructor')->get();
 
         // check có mã giảm giá
         if (Session::has('coupon')) {
@@ -243,6 +248,21 @@ class CartController extends Controller
             return view('frontend.payment.stripe', compact('data', 'cartTotal', 'carts'));
         } elseif ($request->cash_delivery == 'handcash') {
 
+            // nếu đã có trong cart thì ko mua
+            foreach ($request->course_title as $key => $course_title) {
+                // check xem user đã mua khoá học chưa
+                $existingOrder = Order::where('user_id', Auth::user()->id)->where('course_id', $request->course_id[$key])->first();
+
+                if ($existingOrder) {
+
+                    $notification = array(
+                        'message' => 'You Have already enrolled in this course',
+                        'alert-type' => 'error'
+                    );
+                    return redirect()->back()->with($notification);
+                } // end if 
+            } // end foreach 
+
 
             // Cerate a new Payment Record 
 
@@ -261,21 +281,10 @@ class CartController extends Controller
             $data->order_year = Carbon::now()->format('Y');
             $data->status = 'pending';
             $data->created_at = Carbon::now();
+            $data->save();
 
 
             foreach ($request->course_title as $key => $course_title) {
-                // check xem user đã mua khoá học chưa
-                $existingOrder = Order::where('user_id', Auth::user()->id)->where('course_id', $request->course_id[$key])->first();
-
-                if ($existingOrder) {
-
-                    $notification = array(
-                        'message' => 'You Have already enrolled in this course',
-                        'alert-type' => 'error'
-                    );
-                    return redirect()->back()->with($notification);
-                } // end if 
-
                 $order = new Order();
                 $order->payment_id = $data->id;
                 $order->user_id = Auth::user()->id;
@@ -285,8 +294,7 @@ class CartController extends Controller
                 $order->price = $request->price[$key];
                 $order->save();
             } // end foreach 
-            // save payment vào db
-            $data->save();
+
 
             $request->session()->forget('cart');
 
@@ -304,6 +312,12 @@ class CartController extends Controller
             Mail::to($request->email)->send(new Orderconfirm($data));
 
             /// End Send email to student /// 
+
+            /// Send Notification (thông báo) đến instructor
+            Notification::send($user, new OrderComplete($request->name));
+
+
+
 
             $notification = array(
                 'message' => 'Cash Payment Submit Successfully',
@@ -439,4 +453,17 @@ class CartController extends Controller
         return response()->json(['success' => 'Successfully Added on Your Cart']);
     } // End Method 
 
+    // update thông báo khi click đọc
+    public function MarkAsRead(Request $request, $notificationId)
+    {
+
+        $user = Auth::user();
+        // Log::info('User:', ['user' => $user]);
+        $notification = $user->notifications()->where('id', $notificationId)->first();
+
+        if ($notification) {
+            $notification->markAsRead();
+        }
+        return response()->json(['count' => $user->unreadNotifications()->count()]);
+    } // End Method 
 }

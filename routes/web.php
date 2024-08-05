@@ -20,7 +20,9 @@ use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Backend\ReviewController;
 use App\Http\Controllers\Backend\ActiveUserController;
 use App\Http\Controllers\Backend\BlogController;
+use App\Http\Controllers\Backend\RoleController;
 use App\Models\BlogCategory;
+use App\Http\Controllers\Backend\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +68,9 @@ Route::middleware('auth')->group(function () {
     Route::controller(QuestionController::class)->group(function () {
         Route::post('/user/question', 'UserQuestion')->name('user.question');
     });
+
+    // chat user
+    Route::get('/live/chat', [UserController::class, 'LiveChat'])->name('live.chat');
 });
 
 require __DIR__ . '/auth.php';
@@ -90,17 +95,17 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     // Category All Route 
     Route::controller(CategoryController::class)->group(function () {
-        Route::get('/all/category', 'AllCategory')->name('all.category');
-        Route::get('/add/category', 'AddCategory')->name('add.category');
+        Route::get('/all/category', 'AllCategory')->name('all.category')->middleware('permission:category.all');
+        Route::get('/add/category', 'AddCategory')->name('add.category')->middleware('permission:category.add');
         Route::post('/store/category', 'StoreCategory')->name('store.category');
-        Route::get('/edit/category/{id}', 'EditCategory')->name('edit.category');
+        Route::get('/edit/category/{id}', 'EditCategory')->name('edit.category')->middleware('permission:category.edit');
         Route::post('/update/category', 'UpdateCategory')->name('update.category');
-        Route::get('/delete/category/{id}', 'DeleteCategory')->name('delete.category');
+        Route::get('/delete/category/{id}', 'DeleteCategory')->name('delete.category')->middleware('permission:category.delete');
     });
 
     // SubCategory All Route 
     Route::controller(CategoryController::class)->group(function () {
-        Route::get('/all/subcategory', 'AllSubCategory')->name('all.subcategory');
+        Route::get('/all/subcategory', 'AllSubCategory')->name('all.subcategory')->middleware('permission:subcategory.all');
         Route::get('/add/subcategory', 'AddSubCategory')->name('add.subcategory');
         Route::post('/store/subcategory', 'StoreSubCategory')->name('store.subcategory');
         Route::get('/edit/subcategory/{id}', 'EditSubCategory')->name('edit.subcategory');
@@ -111,7 +116,7 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     // Instructor All Route 
     Route::controller(AdminController::class)->group(function () {
-        Route::get('/all/instructor', 'AllInstructor')->name('all.instructor');
+        Route::get('/all/instructor/ac', 'AllInstructor')->name('instructor.all');
         Route::post('/update/user/stauts', 'UpdateUserStatus')->name('update.user.stauts');
     });
 
@@ -124,12 +129,12 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     // Admin Coupon All Route 
     Route::controller(CouponController::class)->group(function () {
-        Route::get('/admin/all/coupon', 'AdminAllCoupon')->name('admin.all.coupon');
-        Route::get('/admin/add/coupon', 'AdminAddCoupon')->name('admin.add.coupon');
+        Route::get('/admin/all/coupon', 'AdminAllCoupon')->name('admin.all.coupon')->middleware('permission:Coupon.all');
+        Route::get('/admin/add/coupon', 'AdminAddCoupon')->name('admin.add.coupon')->middleware('permission:Coupon.add');
         Route::post('/admin/store/coupon', 'AdminStoreCoupon')->name('admin.store.coupon');
-        Route::get('/admin/edit/coupon/{id}', 'AdminEditCoupon')->name('admin.edit.coupon');
+        Route::get('/admin/edit/coupon/{id}', 'AdminEditCoupon')->name('admin.edit.coupon')->middleware('permission:Coupon.edit');
         Route::post('/admin/update/coupon', 'AdminUpdateCoupon')->name('admin.update.coupon');
-        Route::get('/admin/delete/coupon/{id}', 'AdminDeleteCoupon')->name('admin.delete.coupon');
+        Route::get('/admin/delete/coupon/{id}', 'AdminDeleteCoupon')->name('admin.delete.coupon')->middleware('permission:Coupon.delete');
     });
 
     // setting All Route 
@@ -185,6 +190,51 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
         Route::get('/edit/post/{id}', 'EditBlogPost')->name('edit.post');
         Route::post('/update/blog/post', 'UpdateBlogPost')->name('update.blog.post');
         Route::get('/delete/post/{id}', 'DeleteBlogPost')->name('delete.post');
+    });
+
+    // Site Setting All Route 
+    Route::controller(SettingController::class)->group(function () {
+        Route::get('/site/setting', 'SiteSetting')->name('site.setting');
+        Route::post('/update/site', 'UpdateSite')->name('update.site');
+    });
+
+    // permission All Route 
+    Route::controller(RoleController::class)->group(function () {
+        Route::get('/all/permission', 'AllPermission')->name('all.permission');
+        Route::get('/add/permission', 'AddPermission')->name('add.permission');
+        Route::post('/store/permission', 'StorePermission')->name('store.permission');
+        Route::get('/edit/permission/{id}', 'EditPermission')->name('edit.permission');
+        Route::post('/update/permission', 'UpdatePermission')->name('update.permission');
+        Route::get('/delete/permission/{id}', 'DeletePermission')->name('delete.permission');
+    });
+
+    // Role All Route 
+    Route::controller(RoleController::class)->group(function () {
+        Route::get('/all/roles', 'AllRoles')->name('all.roles');
+        Route::get('/add/roles', 'AddRoles')->name('add.roles');
+        Route::post('/store/roles', 'StoreRoles')->name('store.roles');
+        Route::get('/edit/roles/{id}', 'EditRoles')->name('edit.roles');
+        Route::post('/update/roles', 'UpdateRoles')->name('update.roles');
+        Route::get('/delete/roles/{id}', 'DeleteRoles')->name('delete.roles');
+
+
+        Route::get('/add/roles/permission', 'AddRolesPermission')->name('add.roles.permission');
+        Route::post('/role/permission/store', 'RolePermissionStore')->name('role.permission.store');
+        Route::get('/all/roles/permission', 'AllRolesPermission')->name('all.roles.permission');
+        Route::get('/admin/edit/roles/{id}', 'AdminEditRoles')->name('admin.edit.roles');
+        Route::post('/admin/roles/update/{id}', 'AdminUpdateRoles')->name('admin.roles.update');
+        Route::get('/admin/delete/roles/{id}', 'AdminDeleteRoles')->name('admin.delete.roles');
+    });
+
+
+    // Admin User All Route 
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/all/admin', 'AllAdmin')->name('all.admin');
+        Route::get('/add/admin', 'AddAdmin')->name('add.admin');
+        Route::post('/store/admin', 'StoreAdmin')->name('store.admin');
+        Route::get('/edit/admin/{id}', 'EditAdmin')->name('edit.admin');
+        Route::post('/update/admin/{id}', 'UpdateAdmin')->name('update.admin');
+        Route::get('/delete/admin/{id}', 'DeleteAdmin')->name('delete.admin');
     });
 }); // End Admin group middleware
 
@@ -321,5 +371,15 @@ Route::get('/blog/cat/list/{id}', [BlogController::class, 'BlogCatList']);
 
 // all blog
 Route::get('/blog', [BlogController::class, 'BlogList'])->name('blog');
+
+// update thông báo khi click đọc
+Route::post('/mark-notification-as-read/{notification}', [CartController::class, 'MarkAsRead']);
+
+// Chat Post Request Route
+Route::post('/send-message', [ChatController::class, 'SendMessage']);
+Route::get('/user-all', [ChatController::class, 'GetAllUsers']);
+Route::get('/user-message/{id}', [ChatController::class, 'UserMsgById']);
+Route::get('/instructor/live/chat', [ChatController::class, 'LiveChat'])->name('instructor.live.chat');
+
 
 /////////////////////////// End Route for all ////////////////////////////////

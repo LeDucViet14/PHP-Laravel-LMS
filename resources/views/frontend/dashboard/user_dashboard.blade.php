@@ -148,6 +148,8 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+    <script src="{{ mix('/js/app.js') }}"></script>
+
     @include('frontend.body.script')
 
 </body>

@@ -8,7 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Easy Learning </title>
+    <title> @yield('title') </title>
+
+    {{-- @vite(['resources/js/app.js']) --}}
 
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -117,6 +119,10 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+    <script src="{{ mix('/js/app.js') }}"></script>
+
 
     @include('frontend.body.script')
 

@@ -21,29 +21,40 @@
 
         <li class="menu-label">UI Elements</li>
 
-        <li>
-            <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class='bx bx-cart'></i>
-                </div>
-                <div class="menu-title">Manage Category</div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('all.category') }}"><i class='bx bx-radio-circle'></i>All Category </a>
-                </li>
-                <li> <a href="{{ route('all.subcategory') }}"><i class='bx bx-radio-circle'></i>All SubCategory </a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                </div>
-                <div class="menu-title">Manage Instructor</div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('all.instructor') }}"><i class='bx bx-radio-circle'></i>All Instructor</a>
-                </li>
-            </ul>
+        @if (Auth::user()->can('category.menu'))
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class='bx bx-cart'></i>
+                    </div>
+                    <div class="menu-title">Manage Category</div>
+                </a>
+                <ul>
+                    @if (Auth::user()->can('category.all'))
+                        <li> <a href="{{ route('all.category') }}"><i class='bx bx-radio-circle'></i>All Category </a>
+                        </li>
+                    @endif
+                    @if (Auth::user()->can('subcategory.all'))
+                        <li> <a href="{{ route('all.subcategory') }}"><i class='bx bx-radio-circle'></i>All SubCategory
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </li>
+        @endif
+
+        @if (Auth::user()->can('Instructor.menu'))
+            <li>
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                    </div>
+                    <div class="menu-title">Manage Instructor</div>
+                </a>
+                <ul>
+                    <li> <a href="{{ route('instructor.all') }}"><i class='bx bx-radio-circle'></i>All Instructor</a>
+                    </li>
+                </ul>
+            </li>
+        @endif
 
         <li>
             <a class="has-arrow" href="javascript:;">
@@ -58,130 +69,168 @@
 
             </ul>
         </li>
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                </div>
-                <div class="menu-title">Manage Coupon</div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('admin.all.coupon') }}"><i class='bx bx-radio-circle'></i>All Coupon</a>
-                </li>
+        @if (Auth::user()->can('Coupon.menu'))
+            <li>
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                    </div>
+                    <div class="menu-title">Manage Coupon</div>
+                </a>
+                <ul>
+                    @if (Auth::user()->can('Coupon.all'))
+                        <li> <a href="{{ route('admin.all.coupon') }}"><i class='bx bx-radio-circle'></i>All Coupon</a>
+                        </li>
+                    @endif
+                </ul>
+            </li>
+        @endif
+        @if (Auth::user()->can('setting.menu'))
+            <li>
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                    </div>
+                    <div class="menu-title">Manage Setting</div>
+                </a>
+                <ul>
+                    <li> <a href="{{ route('smtp.setting') }}"><i class='bx bx-radio-circle'></i>Manage SMPT</a>
+                    </li>
+                    <li> <a href="{{ route('site.setting') }}"><i class='bx bx-radio-circle'></i>Site Setting </a>
+                    </li>
 
 
-            </ul>
-        </li>
+                </ul>
+            </li>
+        @endif
 
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                </div>
-                <div class="menu-title">Manage Setting</div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('smtp.setting') }}"><i class='bx bx-radio-circle'></i>Manage SMPT</a>
-                </li>
-
-
-            </ul>
-        </li>
-
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                </div>
-                <div class="menu-title">Manage Orders</div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('admin.pending.order') }}"><i class='bx bx-radio-circle'></i>Pending Orders </a>
-                </li>
-                <li> <a href="{{ route('admin.confirm.order') }}"><i class='bx bx-radio-circle'></i>Confirm Orders </a>
-                </li>
+        @if (Auth::user()->can('order.menu'))
+            <li>
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                    </div>
+                    <div class="menu-title">Manage Orders</div>
+                </a>
+                <ul>
+                    <li> <a href="{{ route('admin.pending.order') }}"><i class='bx bx-radio-circle'></i>Pending Orders
+                        </a>
+                    </li>
+                    <li> <a href="{{ route('admin.confirm.order') }}"><i class='bx bx-radio-circle'></i>Confirm Orders
+                        </a>
+                    </li>
 
 
-            </ul>
-        </li>
+                </ul>
+            </li>
+        @endif
 
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                </div>
-                <div class="menu-title">Manage Report</div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('report.view') }}"><i class='bx bx-radio-circle'></i>Report View </a>
-                </li>
-
-
-
-            </ul>
-        </li>
-
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                </div>
-                <div class="menu-title">Manage Review</div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('admin.pending.review') }}"><i class='bx bx-radio-circle'></i>Pending Review
-                    </a>
-                </li>
-                <li> <a href="{{ route('admin.active.review') }}"><i class='bx bx-radio-circle'></i>Active Review </a>
-                </li>
+        @if (Auth::user()->can('report.menu'))
+            <li>
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                    </div>
+                    <div class="menu-title">Manage Report</div>
+                </a>
+                <ul>
+                    <li> <a href="{{ route('report.view') }}"><i class='bx bx-radio-circle'></i>Report View </a>
+                    </li>
 
 
 
-            </ul>
-        </li>
+                </ul>
+            </li>
+        @endif
 
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                </div>
-                <div class="menu-title">Manage All User </div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('all.user') }}"><i class='bx bx-radio-circle'></i>All User </a>
-                </li>
-                <li> <a href="{{ route('all.instructor') }}"><i class='bx bx-radio-circle'></i>All Instructor</a>
-                </li>
-
-
-
-            </ul>
-        </li>
-
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-                </div>
-                <div class="menu-title">Manage Blog </div>
-            </a>
-            <ul>
-                <li> <a href="{{ route('blog.category') }}"><i class='bx bx-radio-circle'></i>Blog Category </a>
-                </li>
-                <li> <a href="{{ route('blog.post') }}"><i class='bx bx-radio-circle'></i>Blog Post</a>
-                </li>
+        @if (Auth::user()->can('review.menu'))
+            <li>
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                    </div>
+                    <div class="menu-title">Manage Review</div>
+                </a>
+                <ul>
+                    <li> <a href="{{ route('admin.pending.review') }}"><i class='bx bx-radio-circle'></i>Pending Review
+                        </a>
+                    </li>
+                    <li> <a href="{{ route('admin.active.review') }}"><i class='bx bx-radio-circle'></i>Active Review
+                        </a>
+                    </li>
 
 
 
-            </ul>
-        </li>
+                </ul>
+            </li>
+        @endif
 
-        <li class="menu-label">Charts & Maps</li>
+        @if (Auth::user()->can('all.user.menu'))
+            <li>
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                    </div>
+                    <div class="menu-title">Manage All User </div>
+                </a>
+                <ul>
+                    <li> <a href="{{ route('all.user') }}"><i class='bx bx-radio-circle'></i>All User </a>
+                    </li>
+                    <li> <a href="{{ route('all.instructor') }}"><i class='bx bx-radio-circle'></i>All Instructor</a>
+                    </li>
+
+
+
+                </ul>
+            </li>
+        @endif
+        @if (Auth::user()->can('blog.menu'))
+            <li>
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
+                    </div>
+                    <div class="menu-title">Manage Blog </div>
+                </a>
+                <ul>
+                    <li> <a href="{{ route('blog.category') }}"><i class='bx bx-radio-circle'></i>Blog Category </a>
+                    </li>
+                    <li> <a href="{{ route('blog.post') }}"><i class='bx bx-radio-circle'></i>Blog Post</a>
+                    </li>
+
+
+
+                </ul>
+            </li>
+        @endif
+
+
+        @if (Auth::user()->can('role.permission.menu'))
+            <li class="menu-label">Role & Permission</li>
+            <li>
+                <a class="has-arrow" href="javascript:;">
+                    <div class="parent-icon"><i class="bx bx-line-chart"></i>
+                    </div>
+                    <div class="menu-title">Role & Permission</div>
+                </a>
+                <ul>
+                    <li> <a href="{{ route('all.permission') }}"><i class='bx bx-radio-circle'></i>All permission</a>
+                    </li>
+                    <li> <a href="{{ route('all.roles') }}"><i class='bx bx-radio-circle'></i>All Roles</a>
+                    </li>
+                    <li> <a href="{{ route('add.roles.permission') }}"><i class='bx bx-radio-circle'></i>Role In
+                            Permission</a>
+                    </li>
+                    <li> <a href="{{ route('all.roles.permission') }}"><i class='bx bx-radio-circle'></i>All Role In
+                            Permission</a>
+                    </li>
+
+
+                </ul>
+            </li>
+        @endif
+
         <li>
             <a class="has-arrow" href="javascript:;">
                 <div class="parent-icon"><i class="bx bx-line-chart"></i>
                 </div>
-                <div class="menu-title">Charts</div>
+                <div class="menu-title">Manage Admin</div>
             </a>
             <ul>
-                <li> <a href="charts-apex-chart.html"><i class='bx bx-radio-circle'></i>Apex</a>
-                </li>
-                <li> <a href="charts-chartjs.html"><i class='bx bx-radio-circle'></i>Chartjs</a>
-                </li>
-                <li> <a href="charts-highcharts.html"><i class='bx bx-radio-circle'></i>Highcharts</a>
+                <li> <a href="{{ route('all.admin') }}"><i class='bx bx-radio-circle'></i>All Admin</a>
                 </li>
             </ul>
         </li>
